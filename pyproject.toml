@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hp-regen-toolkit"
+version = "0.1.0"
+description = "Local, open-source printer recovery workbench"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "HP regen toolkit contributors"}]
+dependencies = []
+classifiers = ["Programming Language :: Python :: 3", "Operating System :: OS Independent", "Topic :: System :: Hardware"]
+
+[project.scripts]
+hp-regen = "hp_regen.cli:main"
+
+[project.urls]
+Repository = "https://github.com/maciejpatej/hp-regen-toolkit"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+hp_regen = ["web/*.html", "web/*.js", "web/*.css", "web/*.png"]

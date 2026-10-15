@@ -1,0 +1,12 @@
+"""Protocol guidance; never a list of physically certified printer models."""
+COMPATIBILITY = [
+    {"id": "hp-p1102w-pilot", "name": "HP LaserJet Pro P1102w · pierwszy pilot", "status": "candidate", "capabilities": ["Profil doboru foo2zjs-z2 / HPLIP", "Plan hosta Linux/CUPS"], "firmware": "unsupported", "details": "Kandydat, bez testu fizycznego. USB → host Linux → IPP jako pierwsza ścieżka. HPLIP wymaga zamkniętej wtyczki; foo2zjs-z2 jest alternatywą do sprawdzenia. Nie zakładamy driverless dla każdej wersji firmware.", "source_url": "https://github.com/OpenPrinting/foo2zjs"},
+    {"id": "ipp", "name": "IPP / IPPS", "status": "protocol_only", "capabilities": ["Wykrywanie mDNS", "Odczyt stanu i możliwości", "Diagnostyka IPP"], "firmware": "unsupported", "details": "Obsługa protokołu wymaga testu na konkretnym urządzeniu. Starsze drukarki bez IPP potrzebują mostu lub sterownika.", "source_url": "https://www.pwg.org/ipp/"},
+    {"id": "cups", "name": "CUPS / IPP Everywhere", "status": "integration", "capabilities": ["Lista lokalnych kolejek", "Dodanie kolejki driverless po potwierdzeniu"], "firmware": "unsupported", "details": "Wymaga zainstalowanego CUPS i zgodnego urządzenia lub mostu. macOS/Linux; brak natywnego adaptera kolejek Windows.", "source_url": "https://openprinting.github.io/cups/"},
+    {"id": "legacy", "name": "Starsze HP, Xerox i inne", "status": "research", "capabilities": ["Dobór ścieżki OpenPrinting", "Przygotowanie adaptera modelu"], "firmware": "unsupported", "details": "Żaden fizyczny model nie ma jeszcze certyfikowanego jailbreaku, flashowania ani wymiany sterownika elektroniki.", "source_url": "https://openprinting.github.io/documentation/05-User-Manual"},
+]
+
+DEMO_DEVICES = [
+    {"id": "demo-laser", "name": "Warsztat · laserowa", "uri": "ipp://192.168.50.21:631/ipp/print", "source": "demo", "model": "DEMO LaserJet", "state": "idle", "reasons": ["none"], "firmware": "unknown", "capabilities": {"document_formats": ["application/pdf", "image/pwg-raster"], "ipp_versions": ["1.1", "2.0"]}, "attributes": {}, "findings": ["Dane symulowane; urządzenie nie zostało sprawdzone."]},
+    {"id": "demo-office", "name": "Biuro · urządzenie wielofunkcyjne", "uri": "ipp://192.168.50.22:631/ipp/print", "source": "demo", "model": "DEMO Xerox MFP", "state": "stopped", "reasons": ["media-empty"], "firmware": "unknown", "capabilities": {"document_formats": ["application/pdf"]}, "attributes": {}, "findings": ["Przykładowy brak papieru. To symulacja, nie wynik diagnozy sprzętu."]},
+]

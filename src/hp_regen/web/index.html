@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Otwarty, lokalny warsztat do diagnostyki i przywracania użyteczności drukarek.">
+  <title>HP regen toolkit — warsztat drukarek</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Przejdź do treści</a>
+  <aside class="sidebar" aria-label="Nawigacja warsztatu">
+    <a class="brand" href="/" aria-label="HP regen toolkit — strona główna">
+      <img src="/logo.png" alt="" width="54" height="54">
+      <span><strong>hp regen<span class="brand-dot">.</span></strong><small>TOOLKIT / OPEN SOURCE</small></span>
+    </a>
+    <div class="sidebar-caption">TWÓJ WARSZTAT</div>
+    <nav class="navigation">
+      <button class="nav-item active" type="button" data-page="devices" aria-current="page"><span class="nav-symbol" aria-hidden="true">▤</span>Urządzenia<span id="nav-count" class="nav-count">0</span></button>
+      <button class="nav-item" type="button" data-page="diagnostics"><span class="nav-symbol" aria-hidden="true">⌁</span>Diagnostyka</button>
+      <button class="nav-item" type="button" data-page="firmware"><span class="nav-symbol" aria-hidden="true">⇧</span>Firmware<span class="nav-mini">LAB</span></button>
+      <button class="nav-item" type="button" data-page="compatibility"><span class="nav-symbol" aria-hidden="true">▦</span>Zgodność</button>
+    </nav>
+    <div class="sidebar-note"><span class="note-mark" aria-hidden="true">↺</span><strong>Sprawne dłużej.</strong><p>Mniej elektrośmieci.<br>Więcej kontroli.</p></div>
+    <div class="sidebar-bottom"><span class="status-dot" aria-hidden="true"></span><span>Lokalnie. Bez telemetrii.</span><small id="version">v0.1</small></div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar"><span>REPAIR IS A FEATURE.</span><div class="session-pill"><span id="session-dot" class="status-dot pending" aria-hidden="true"></span><span id="session-status">Łączenie z warsztatem…</span></div></header>
+    <main id="main-content" tabindex="-1">
+      <div id="demo-banner" class="demo-banner" role="status" hidden><strong>TRYB DEMO</strong><span>Przykładowe urządzenia i odpowiedzi. Ten tryb nie łączy się z drukarkami.</span></div>
+      <div id="global-error" class="error-banner" role="alert" hidden></div>
+
+      <section class="page active-page" id="page-devices" aria-labelledby="devices-title">
+        <div class="page-heading"><div><div class="eyebrow">01 / URZĄDZENIA</div><h1 id="devices-title">Daj drukarce<br><span>drugie życie.</span></h1><p>Znajdź, sprawdź, zaplanuj naprawę. Wszystko w jednym lokalnym warsztacie.</p></div><div class="heading-stamp"><span aria-hidden="true">↺</span><strong>BUILT TO<br>KEEP WORKING.</strong></div></div>
+        <div class="overview-strip"><div><span class="metric-number" id="device-count">00</span><span class="metric-label">urządzeń<br>w warsztacie</span></div><div><span class="mini-icon" aria-hidden="true">◉</span><span class="metric-label"><strong>Twoja sieć</strong><br>Skanowanie tylko na żądanie</span></div><div><span class="mini-icon" aria-hidden="true">◇</span><span class="metric-label"><strong>Najpierw diagnoza</strong><br>Bez zmian w urządzeniu</span></div></div>
+
+        <section class="panel discovery-panel" aria-labelledby="discovery-title">
+          <div class="panel-header"><div><h2 id="discovery-title">Znajdź drukarki</h2><p>Wykrywanie przez mDNS lub ograniczony skan prywatnej podsieci.</p></div><span class="label-badge">TYLKO ODCZYT</span></div>
+          <form id="discovery-form">
+            <div class="discovery-fields"><div class="field"><label for="discovery-method">Metoda wykrywania</label><select id="discovery-method" name="method"><option value="mdns">mDNS · urządzenia ogłaszające IPP</option><option value="subnet">Skan wskazanej podsieci · IPv4</option></select></div><div class="field" id="subnet-field" hidden><label for="subnet-cidr">Prywatna podsieć (maks. /24)</label><input id="subnet-cidr" name="cidr" placeholder="192.168.1.0/24" autocomplete="off" spellcheck="false"><small>Maksymalnie 256 adresów. Bez skanowania Internetu.</small></div></div>
+            <div class="discovery-footer"><label class="checkbox-label"><input type="checkbox" id="network-ack"><span>To moja sieć lub mam zgodę jej administratora.</span></label><button id="discover-button" class="button primary" type="submit"><span aria-hidden="true">⌕</span>Znajdź urządzenia</button></div>
+          </form>
+          <div id="discovery-message" class="inline-message" role="status" hidden></div>
+        </section>
+
+        <div class="section-heading"><h2>Urządzenia w warsztacie <span id="inventory-count" class="count-badge">0</span></h2><span class="muted">IPP / IPPS</span></div>
+        <div id="device-grid" class="device-grid"></div>
+        <div id="device-empty" class="empty-state"><div class="printer-outline" aria-hidden="true"><span></span></div><h3>Warsztat czeka na pierwszą drukarkę.</h3><p>Uruchom wykrywanie lub podaj adres urządzenia poniżej.</p></div>
+        <section class="manual-panel" aria-labelledby="manual-title"><div><h3 id="manual-title">Znasz adres drukarki?</h3><p>Dodaj konkretny adres IPP bez skanowania sieci.</p></div><form id="manual-form"><label class="sr-only" for="printer-uri">Adres IPP drukarki</label><input id="printer-uri" type="text" placeholder="ipp://192.168.1.20:631/ipp/print" autocomplete="off" spellcheck="false" required><button class="button secondary" id="manual-button" type="submit">Sprawdź adres <span aria-hidden="true">↗</span></button></form></section>
+      </section>
+
+      <section class="page" id="page-diagnostics" aria-labelledby="diagnostics-title" hidden>
+        <div class="page-heading compact"><div><div class="eyebrow">02 / DIAGNOSTYKA</div><h1 id="diagnostics-title">Poznaj urządzenie.</h1><p>Stan, możliwości i wskazówki na podstawie odpowiedzi IPP.</p></div><button class="button secondary" id="report-button" type="button">Pobierz raport <span aria-hidden="true">↓</span></button></div>
+        <div id="inspection-empty" class="empty-state"><div class="empty-symbol" aria-hidden="true">⌁</div><h3>Najpierw wybierz drukarkę.</h3><p>Otwórz urządzenie z warsztatu lub podaj jego adres IPP.</p><button class="button secondary" type="button" data-go="devices">Przejdź do urządzeń <span aria-hidden="true">↗</span></button></div>
+        <div id="inspection-workspace" hidden>
+          <section class="panel selected-panel"><div><div class="eyebrow">WYBRANE URZĄDZENIE</div><h2 id="selected-name"></h2><p id="selected-uri" class="mono wrap"></p></div><button class="button primary" id="inspect-button" type="button">Odczytaj stan <span aria-hidden="true">↗</span></button></section>
+          <p class="permission-reminder">Odczyt wymaga zaznaczenia zgody na dostęp do sieci w zakładce Urządzenia.</p>
+          <div id="inspection-message" class="inline-message" role="status" hidden></div>
+          <div id="inspection-result" hidden><div id="inspection-summary" class="diagnostic-grid"></div><section class="panel findings-panel"><div class="panel-header"><div><h2>Wskazówki diagnostyczne</h2><p>Odczyt nie potwierdza poprawności mechaniki ani jakości druku.</p></div></div><div id="inspection-findings"></div></section><details class="panel raw-panel"><summary>Surowe atrybuty IPP <span aria-hidden="true">＋</span></summary><pre id="inspection-raw"></pre></details></div>
+          <section class="panel bridge-panel" aria-labelledby="bridge-title"><div class="panel-header"><div><h2 id="bridge-title">Drukowanie bez aplikacji producenta</h2><p>Sprawdź plan dodania lokalnej kolejki CUPS przez IPP.</p></div><span id="cups-status" class="label-badge">CUPS: SPRAWDZANIE</span></div><form id="bridge-form"><div class="field"><label for="queue-name">Nazwa lokalnej kolejki</label><input id="queue-name" type="text" value="regen_printer" pattern="[A-Za-z][A-Za-z0-9_\-]{0,62}" maxlength="63" required><small>Pierwszy znak: litera ASCII. Dalej litery, cyfry, myślnik i podkreślenie. Maks. 63 znaki.</small></div><button id="bridge-plan-button" type="submit" class="button secondary">Pokaż plan połączenia <span aria-hidden="true">↗</span></button></form><div id="bridge-message" class="inline-message" role="status" hidden></div><div id="bridge-plan" hidden><pre id="bridge-command" class="command-preview"></pre><div id="bridge-instructions"></div><label class="checkbox-label bridge-ack"><input id="bridge-ack" type="checkbox"><span>Zatwierdzam dodanie tej kolejki do systemu na tym komputerze.</span></label><button class="button primary" id="bridge-install-button" type="button" disabled>Dodaj lokalną kolejkę <span aria-hidden="true">＋</span></button></div><details id="existing-queues" hidden><summary>Istniejące kolejki CUPS</summary><ul id="queue-list"></ul></details></section>
+        </div>
+      </section>
+
+      <section class="page" id="page-firmware" aria-labelledby="firmware-title" hidden>
+        <div class="page-heading compact"><div><div class="eyebrow">03 / FIRMWARE LAB</div><h1 id="firmware-title">Sprawdź, zanim wgrasz.</h1><p>Analiza lokalnego pliku. Żadne dane nie są wysyłane do drukarki.</p></div><span class="label-badge large-badge">OFFLINE PREFLIGHT</span></div>
+        <div class="firmware-notice"><span aria-hidden="true">!</span><div><strong>Brak adaptera zapisu firmware</strong><p>Ta wersja nie flashuje i nie wykonuje jailbreaku. Wynik sprawdzenia sumy i modelu nie potwierdza autentyczności ani bezpieczeństwa obrazu.</p></div></div>
+        <div class="firmware-layout"><section class="panel firmware-form-panel"><div class="panel-header"><div><h2>Przygotuj pakiet</h2><p>Manifest traktujemy jako niezaufane dane, a nie certyfikat producenta.</p></div></div><form id="firmware-form"><div class="field"><label for="firmware-model">Dokładny model urządzenia</label><input id="firmware-model" type="text" placeholder="Pełna nazwa modelu z etykiety drukarki" required autocomplete="off"><small>Nie wystarczy sama marka ani nazwa serii.</small></div><div class="field"><label for="firmware-file">Obraz firmware <span class="muted">maks. 4 MiB</span></label><input id="firmware-file" type="file" required><small>Wybierz lokalny plik binarny. Plik pozostaje na tym komputerze.</small></div><div class="field"><label for="firmware-manifest">Manifest JSON</label><textarea id="firmware-manifest" rows="8" placeholder="Wklej manifest z dokładnym modelem, rozmiarem pliku i sumą SHA-256." required spellcheck="false"></textarea><small>Wymagane: schema_version (1), model, firmware_version, sha256, size, source_url (HTTPS).</small><details class="manifest-help"><summary>Format manifestu</summary><pre>{
+  "schema_version": 1,
+  "model": "DOKŁADNY MODEL",
+  "firmware_version": "WERSJA",
+  "sha256": "64 znaki szesnastkowe",
+  "size": 123456,
+  "source_url": "https://example.org/firmware"
+}</pre></details></div><button class="button primary full-width" id="preflight-button" type="submit">Sprawdź pakiet <span aria-hidden="true">↗</span></button></form><div id="firmware-message" class="inline-message" role="status" hidden></div></section><aside class="firmware-side"><div class="panel checklist-panel"><div class="eyebrow">ZANIM POWSTANIE ADAPTER</div><h2>Nie ma skrótów<br>do bezpiecznego flashu.</h2><ol><li><strong>Zidentyfikuj sprzęt</strong><span>Dokładny model, rewizja i bootloader.</span></li><li><strong>Sprawdź źródło obrazu</strong><span>Hash potwierdza zgodność pliku z manifestem, nie jego autentyczność.</span></li><li><strong>Zapewnij drogę powrotu</strong><span>Kopia, recovery i fizyczna weryfikacja na konkretnym urządzeniu.</span></li></ol><span class="label-badge">ZAPIS: NIEDOSTĘPNY</span></div></aside></div>
+        <section id="preflight-result-panel" class="panel preflight-panel" hidden><div class="panel-header"><div><h2>Wynik sprawdzenia</h2><p>Preflight nie jest zgodą na wgranie obrazu.</p></div><span class="label-badge">NIE ZMIENIONO URZĄDZENIA</span></div><div id="preflight-result"></div></section>
+      </section>
+
+      <section class="page" id="page-compatibility" aria-labelledby="compatibility-title" hidden><div class="page-heading compact"><div><div class="eyebrow">04 / ZGODNOŚĆ</div><h1 id="compatibility-title">Możliwości, bez obietnic.</h1><p>Otwarta mapa obsługi. Wykrycie urządzenia nie oznacza obsługi zmiany jego firmware.</p></div><span class="label-badge large-badge">WORK IN PROGRESS</span></div><div class="compatibility-intro"><strong>Protokół najpierw. Model później.</strong><p>Diagnostyka IPP może działać z wieloma markami. Naprawy i zamiana elektroniki wymagają osobnego, sprawdzonego adaptera dla konkretnego sprzętu.</p></div><div id="compatibility-grid" class="compatibility-grid"></div><p id="compatibility-empty" class="muted" hidden>Brak wpisów w bazie zgodności.</p></section>
+      <footer class="footer"><span>HP regen toolkit <span aria-hidden="true">/</span> Niezależny projekt open source.</span><span>Nie jest powiązany z HP ani innymi producentami.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
